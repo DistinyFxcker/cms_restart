@@ -1,5 +1,11 @@
 package config
 
+import (
+	"encoding/json"
+	"os"
+	"path"
+)
+
 const (
 	Version = "V2.0.18"
 
@@ -44,4 +50,24 @@ func Global(dataDir string) *Config{
 	cfg.DataDir = dataDir
 	return cfg
 }
+//
+func (c *Config) Load() error{
+	cfgPath := path.Join(cfg.DataDir, "cms.conf")
+	return cfg.saveToFaile(cfgPath)
+}
 
+func (c *Config) saveToFaile(cfgPath string) error{
+	cfgFile , err := os.Create(cfgPath)
+	if err != nil {
+		return err
+	}
+	defer cfgFile.Close()
+	//json.NewEncoder序列化
+	encoder := json.NewEncoder(cfgFile)
+	encoder.SetIndent("","\t")
+
+	if err := encoder.Encode(c);err != nil{
+		return err
+	}
+	return nil
+}

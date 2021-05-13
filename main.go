@@ -30,4 +30,10 @@ func main() {
 
 func getConfig() *config.Config{
 	cfg := config.Global(*dataDir)
+	// 从配置文件中获取配置;
+	if err :=cfg.Load();err != nil {
+		cfg.SetDefault()
+	}
+
+	return config.Config{}
 }
